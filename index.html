@@ -55,15 +55,10 @@
     }
     .nav-l { display: flex; align-items: center; gap: 13px; }
     .nav-logo {
-      width: 44px; height: 44px; border-radius: 50%;
-      border: 1.5px solid rgba(0,0,0,.12); overflow: hidden; flex-shrink: 0;
-      background: #fff;
+      height: 40px; flex-shrink: 0;
     }
-    .nav-logo img { width: 100%; height: 100%; object-fit: contain; display: block; padding: 3px; }
-    .nav-brand {
-      font-family: 'Anton', sans-serif; font-size: 13px;
-      letter-spacing: 4px; text-transform: uppercase; color: var(--black);
-    }
+    .nav-logo img { height: 100%; width: auto; display: block; object-fit: contain; }
+    .nav-brand { display: none; } /* hidden — logo image includes the text */
     .nav-links { list-style: none; display: flex; gap: 38px; }
     .nav-links a {
       text-decoration: none; font-size: 10px; font-weight: 600;
@@ -79,7 +74,7 @@
 
     /* Full brand name — single line, fully visible below shoe */
     .t-main {
-      position: absolute; bottom: 11vh; left: 50%;
+      position: absolute; bottom: 20vh; left: 50%;
       transform: translateX(-50%);
       font-family: 'Anton', sans-serif;
       font-size: clamp(48px, 7.2vw, 104px);
@@ -90,14 +85,7 @@
       animation: sweepR 1s cubic-bezier(.76,0,.24,1) .7s forwards;
     }
 
-    /* Thin red rule under brand name */
-    .la-line {
-      position: absolute; bottom: calc(11vh - 6px); left: 50%;
-      transform: translateX(-50%);
-      height: 2px; width: 0;
-      background: var(--red); z-index: 41;
-      animation: lineGrow .6s cubic-bezier(.76,0,.24,1) 1.6s forwards;
-    }
+    .la-line { display: none; }
 
     /* ─── Shoe ─── */
     .shoe-parallax {
@@ -225,7 +213,7 @@
 
     /* View Rentals button — appears bottom-right at end of animation */
     .btn-rentals {
-      position: absolute; bottom: 52px; right: 52px; z-index: 10;
+      position: absolute; bottom: 140px; right: 52px; z-index: 10;
       padding: 14px 32px;
       font-size: 9px; font-weight: 700; letter-spacing: 3.5px;
       text-transform: uppercase; border: none; cursor: none;
@@ -249,7 +237,7 @@
     }
     .car-info span b { color: #fff; font-weight: 700; }
 
-    .car-eyebrow { z-index: 10; }
+    .car-eyebrow { display: none !important; }
 
     /* Car section ticker */
     .car-ticker {
@@ -297,7 +285,7 @@
   <!-- Nav -->
   <nav>
     <div class="nav-l">
-      <div class="nav-logo"><img src="assets/logo.png" alt="La Familia"></div>
+      <div class="nav-logo"><img src="assets/logo-full.png" alt="La Familia" onerror="this.src='assets/logo.png'"></div>
       <span class="nav-brand">La Familia</span>
     </div>
     <ul class="nav-links">
