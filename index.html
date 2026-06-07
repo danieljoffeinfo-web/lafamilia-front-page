@@ -55,7 +55,7 @@
     }
     .nav-l { display: flex; align-items: center; gap: 13px; }
     .nav-logo {
-      height: 36px; flex-shrink: 0;
+      height: 54px; flex-shrink: 0;
     }
     .nav-logo img { height: 100%; width: auto; display: block; object-fit: contain; }
     .nav-brand { display: none; }
@@ -177,9 +177,111 @@
     }
     .ticker-track em { color: var(--red); font-style: normal; padding: 0 6px; font-size: 12px; }
 
+    /* ─── Products Section ─── */
+    .products-section {
+      background: var(--white);
+      padding: 60px 20px 60px;
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    /* Grid — 3 columns on desktop */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .product-card {
+      display: flex; flex-direction: column;
+    }
+
+    /* ─── Product Image: ripple container ─── */
+    .product-img-wrap {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--white);
+      /* CSS vars for ripple position, default to centre */
+      --x: 50%; --y: 50%;
+    }
+
+    .product-img-wrap img {
+      display: block; width: 100%; height: auto;
+      mix-blend-mode: multiply;
+      will-change: transform;
+      /* scale(1.1) at rest crops the dark border that's baked into the source images */
+      transform: scale(1.1);
+      transition: transform .5s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    /* Cursor-tracked radial glow */
+    .product-img-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        circle 140px at var(--x) var(--y),
+        rgba(0,0,0,.06) 0%,
+        transparent 70%
+      );
+      opacity: 0;
+      pointer-events: none; z-index: 2;
+      transition: opacity .3s ease;
+    }
+
+    /* Shimmer sweep — plays while hovering */
+    .product-img-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        108deg,
+        transparent 38%,
+        rgba(255,255,255,.5) 50%,
+        transparent 62%
+      );
+      transform: translateX(-110%);
+      pointer-events: none; z-index: 3;
+      animation: shimmerSweep 1.6s ease infinite;
+      animation-play-state: paused;
+    }
+
+    /* Hover state — desktop only */
+    @media (hover: hover) {
+      .product-img-wrap:hover img        { transform: scale(1.14); }
+      .product-img-wrap:hover::before    { opacity: 1; }
+      .product-img-wrap:hover::after     { animation-play-state: running; }
+    }
+
+    @keyframes shimmerSweep {
+      0%   { transform: translateX(-110%); }
+      100% { transform: translateX(110%); }
+    }
+
+    /* Honour prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .product-img-wrap img,
+      .product-img-wrap::before { transition: none; }
+      .product-img-wrap::after  { animation: none; }
+    }
+
+    /* Sold out label */
+    .sold-out {
+      padding: 12px 2px 0;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── Mobile: stack to 1 column ─── */
+    @media (max-width: 700px) {
+      .products-section { padding: 40px 12px 40px; }
+      .products-grid    { grid-template-columns: 1fr; gap: 24px; }
+    }
+
     /* ─── Car Section ─── */
     .car-section {
-      height: 500vh; /* ~100vh per second of 5s video */
+      height: 500vh;
       background: var(--white);
       border-top: 1px solid rgba(0,0,0,.06);
     }
@@ -203,15 +305,6 @@
       transition: opacity .6s ease;
     }
 
-    /* Car section eyebrow */
-    .car-eyebrow {
-      position: absolute; top: 32px; left: 52px;
-      font-size: 9px; font-weight: 700; letter-spacing: 4px;
-      text-transform: uppercase; color: var(--muted);
-      opacity: 0; transition: opacity .5s;
-    }
-
-    /* View Rentals button — appears bottom-right at end of animation */
     .btn-rentals {
       position: absolute; bottom: 140px; right: 52px; z-index: 10;
       padding: 14px 32px;
@@ -222,7 +315,6 @@
     }
     .btn-rentals:hover { background: var(--red); color: var(--white); transform: translateY(-2px); }
 
-    /* Info bar at bottom */
     .car-info {
       position: absolute; bottom: 52px; z-index: 10;
       left: 0; right: 0;
@@ -237,9 +329,6 @@
     }
     .car-info span b { color: #fff; font-weight: 700; }
 
-    .car-eyebrow { display: none !important; }
-
-    /* Car section ticker */
     .car-ticker {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
       height: 34px; background: var(--black); overflow: hidden;
@@ -309,7 +398,6 @@
     </div>
 
     <span class="side-l">Est. 2024 · Cape Town</span>
-    <span class="side-r">Jordan IV · KAWS</span>
 
     <div class="cta-row">
       <button class="btn btn-fill">Explore the Drop</button>
@@ -330,13 +418,38 @@
     </div>
   </section>
 
+  <!-- ── Products Section ── -->
+  <section class="products-section" id="productsSection">
+    <div class="products-grid">
+
+      <article class="product-card" data-ripple>
+        <div class="product-img-wrap">
+          <img src="assets/tshirt-lf-black.png" alt="LF Classic Tee" loading="lazy">
+        </div>
+        <p class="sold-out">Sold Out</p>
+      </article>
+
+      <article class="product-card" data-ripple>
+        <div class="product-img-wrap">
+          <img src="assets/tshirt-dove-black.png" alt="Dove Drop Tee" loading="lazy">
+        </div>
+        <p class="sold-out">Sold Out</p>
+      </article>
+
+      <article class="product-card" data-ripple>
+        <div class="product-img-wrap">
+          <img src="assets/tshirt-baroque-white.png" alt="LF Baroque Tee" loading="lazy">
+        </div>
+        <p class="sold-out">Sold Out</p>
+      </article>
+
+    </div>
+  </section>
+
   <!-- ── Car Section ── -->
   <section class="car-section" id="carSection">
     <div class="car-sticky">
 
-      <div class="car-eyebrow" id="carEyebrow">The Ride &nbsp;·&nbsp; La Familia Series</div>
-
-      <!-- Scroll-scrubbed video — muted + no autoplay -->
       <video id="carVideo"
         src="assets/car.mp4"
         muted playsinline preload="auto"
@@ -424,18 +537,31 @@
     })();
 
     /* ════════════════════════════════
+       PRODUCTS — Cursor-tracked ripple
+    ════════════════════════════════ */
+    /* Skip entirely on touch-only devices */
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('[data-ripple] .product-img-wrap').forEach(wrap => {
+        wrap.addEventListener('mousemove', e => {
+          const r = wrap.getBoundingClientRect();
+          wrap.style.setProperty('--x', ((e.clientX - r.left) / r.width  * 100) + '%');
+          wrap.style.setProperty('--y', ((e.clientY - r.top)  / r.height * 100) + '%');
+        });
+      });
+    }
+
+    /* ════════════════════════════════
        CAR SECTION — Video scrubber
     ════════════════════════════════ */
     const carSection = document.getElementById('carSection');
     const carVideo   = document.getElementById('carVideo');
     const carInfo    = document.getElementById('carInfo');
     const btnRentals = document.getElementById('btnRentals');
-    const carEyebrow = document.getElementById('carEyebrow');
     const carTicker  = document.getElementById('carTicker');
 
     let videoReady = false;
-    let rawP       = 0;   // actual scroll progress
-    let smoothP    = 0;   // lerped progress fed to video
+    let rawP       = 0;
+    let smoothP    = 0;
     let lastSeek   = -1;
 
     carVideo.addEventListener('canplay', () => { videoReady = true; });
@@ -448,13 +574,10 @@
 
     function scrubCar() {
       rawP = getCarProgress();
-
-      /* Directional lerp — slightly gentler going backwards to hide reverse-seek jank */
       const delta = rawP - smoothP;
       const lerpF = delta < 0 ? 0.06 : 0.10;
       smoothP += delta * lerpF;
 
-      /* Seek — small threshold so reverse stays tight without big jumps */
       if (videoReady && carVideo.duration) {
         const t = smoothP * carVideo.duration;
         if (Math.abs(t - lastSeek) > 0.008) {
@@ -463,12 +586,9 @@
         }
       }
 
-      /* Fade in when section enters view */
       const visible = rawP > 0.005;
-      carVideo.style.opacity   = visible ? '1' : '0';
-      carEyebrow.style.opacity = visible ? '1' : '0';
+      carVideo.style.opacity = visible ? '1' : '0';
 
-      /* Info + ticker + rentals button appear on last ~15% */
       const atEnd = smoothP > 0.85;
       carInfo.style.opacity    = atEnd ? '1' : '0';
       carTicker.style.opacity  = atEnd ? '1' : '0';
@@ -477,7 +597,6 @@
       requestAnimationFrame(scrubCar);
     }
 
-    /* Only run RAF when section is visible */
     let carRafId = null;
     const carObserver = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
